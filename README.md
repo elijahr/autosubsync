@@ -1,11 +1,6 @@
 # Automatic subtitle synchronization tool
 
-[![PyPI](https://img.shields.# Customize anchor processing - 3 points with 10-minute segments
-autosubsync movie.mp4 subs.srt output.srt --anchor_points 3 --anchor_duration_mins 10
-
-# Or specify duration in seconds instead
-autosubsync movie.mp4 subs.srt output.srt --anchor_points 3 --anchor_duration_secs 600
-```pypi/v/autosubsync.svg)](https://pypi.python.org/pypi/autosubsync)
+[![PyPI](https://img.shields.pypi/v/autosubsync.svg)](https://pypi.python.org/pypi/autosubsync)
 
 Did you know that hundreds of movies, especially from the 1950s and '60s,
 are now in public domain and available online? Great! Let's download
