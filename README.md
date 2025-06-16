@@ -103,11 +103,16 @@ Each anchor becomes a synchronization point for progressive drift correction.
 autosubsync supports both local video files and remote video files via HTTP/HTTPS URLs:
 
 ```
-# Local file
+# Local video
 autosubsync local-video.mp4 subtitles.srt synced.srt
 
-# Remote file
-See `autosubsync --help` for more details.
+# Remote video
+autosubsync https://example.com/remote-video.mp4 subtitles.srt synced.srt
+
+# Remote subtitles
+autosubsync local-video.mp4 https://example.com/subtitles.srt synced.srt
+```
+
 
 ## Features
 
