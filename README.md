@@ -67,11 +67,8 @@ autosubsync local-movie.mp4 https://example.com/subtitles.srt output.srt
 For large video files (local or remote), you can use anchor-based synchronization to improve performance and enable progressive drift correction:
 
 ```bash
-# Use anchor-based synchronization with 5 anchor points
-autosubsync large-movie.mkv subtitles.srt output.srt --anchor_points 5
-
-# Customize anchor processing - 3 points with 10-minute segments
-autosubsync movie.mp4 subs.srt output.srt --anchor_points 3 --anchor_duration_mins 10
+# Use anchor-based synchronization with 10 anchor points with 2-minute segments
+autosubsync movie.mp4 subs.srt output.srt --anchor_points 8 --anchor_duration_mins 5
 ```
 
 #### How Anchor-Based Synchronization Works
