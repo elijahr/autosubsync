@@ -1,6 +1,11 @@
 # Automatic subtitle synchronization tool
 
-[![PyPI](https://img.shields.io/pypi/v/autosubsync.svg)](https://pypi.python.org/pypi/autosubsync)
+[![PyPI](https://img.shields.# Customize anchor processing - 3 points with 10-minute segments
+autosubsync movie.mp4 subs.srt output.srt --anchor_points 3 --anchor_duration_mins 10
+
+# Or specify duration in seconds instead
+autosubsync movie.mp4 subs.srt output.srt --anchor_points 3 --anchor_duration_secs 600
+```pypi/v/autosubsync.svg)](https://pypi.python.org/pypi/autosubsync)
 
 Did you know that hundreds of movies, especially from the 1950s and '60s,
 are now in public domain and available online? Great! Let's download
@@ -36,6 +41,8 @@ The `libsndfile1` is sometimes but not always needed due to https://github.com/b
 
 ## Usage
 
+### Basic Usage
+
 ```
 autosubsync [input movie] [input subtitles] [output subs]
 
@@ -44,6 +51,67 @@ autosubsync plan-9-from-outer-space.avi \
   plan-9-out-of-sync-subs.srt \
   plan-9-subtitles-synced.srt
 ```
+
+### Remote Video Files
+
+autosubsync supports both local files and remote video/subtitle files accessed via HTTP/HTTPS URLs:
+
+```bash
+# Remote video with local subtitles
+autosubsync https://example.com/movie.mp4 local-subtitles.srt output.srt
+
+# Remote video with remote subtitles
+autosubsync https://example.com/movie.mp4 https://example.com/subtitles.srt output.srt
+
+# Local video with remote subtitles
+autosubsync local-movie.mp4 https://example.com/subtitles.srt output.srt
+```
+
+### Anchor-Based Synchronization for Large Files
+
+For large video files (local or remote), you can use anchor-based synchronization to improve performance and enable progressive drift correction:
+
+```bash
+# Use anchor-based synchronization with 5 anchor points
+autosubsync large-movie.mkv subtitles.srt output.srt --anchor_points 5
+
+# Customize anchor processing - 3 points with 10-minute segments
+autosubsync movie.mp4 subs.srt output.srt --anchor_points 3 --anchor_duration_mins 10
+```
+
+#### How Anchor-Based Synchronization Works
+
+Instead of processing the entire video file, autosubsync can work with representative anchor points:
+
+```
+Original Video: |████████████████████████████████████████| (2 hours, 2GB)
+
+Anchor Mode:    |██|      |██|      |██|      |██|      |██| (5 anchors, ~25MB total)
+                ^anchor1  ^anchor2  ^anchor3  ^anchor4  ^anchor5
+
+Each anchor becomes a synchronization point for progressive drift correction.
+```
+
+**Benefits:**
+- ⚡ Much faster processing for large files
+- 🌐 Efficient for remote videos (downloads only small segments)
+- 🎯 Progressive drift correction throughout the video
+- 💾 Lower memory usage
+- 📈 Better accuracy for long videos with varying sync issues
+
+**When to use anchor-based synchronization:**
+- Video files larger than 1GB
+- Remote video files
+- Long videos (>1 hour) with potential drift
+- Videos with varying synchronization issues throughout
+
+autosubsync supports both local video files and remote video files via HTTP/HTTPS URLs:
+
+```
+# Local file
+autosubsync local-video.mp4 subtitles.srt synced.srt
+
+# Remote file
 See `autosubsync --help` for more details.
 
 ## Features
@@ -51,13 +119,15 @@ See `autosubsync --help` for more details.
  * Automatic speed and shift correction
  * Typical synchronization accuracy ~0.15 seconds (see [performance](#performance))
  * Wide video format support through [ffmpeg](https://www.ffmpeg.org/)
+ * **Local and remote video files** - Supports both filesystem paths and HTTP/HTTPS URLs
+ * **Efficient chunked processing** - For remote videos, downloads only representative audio segments
  * Supports all reasonably encoded SRT files in any language
  * Should work with any language in the audio (only tested with a few though)
  * Quality-of-fit metric for checking sync success
  * Python API. Example (save as `batch_sync.py`):
 
     ```python
-    "Batch synchronize video files in a folder: python batch_sync.py /path/to/folder"
+    "Batch synchronize video files with advanced features"
 
     import autosubsync
     import glob, os, sys
@@ -68,8 +138,32 @@ See `autosubsync --help` for more details.
             srt_file = base + '.srt'
             synced_srt_file = base + '_synced.srt'
 
-            # see help(autosubsync.synchronize) for more details
+            # Basic usage - traditional single-point synchronization
             autosubsync.synchronize(video_file, srt_file, synced_srt_file)
+
+            # Advanced: Anchor-based sync for large files with progressive drift correction
+            autosubsync.synchronize(
+                video_file, srt_file, synced_srt_file,
+                anchor_points=5,  # Use 5 anchor points for progressive sync
+                anchor_duration_mins=8,  # 8-minute segments per anchor
+                verbose=True
+            )
+
+            # Alternative: Specify duration in seconds instead of minutes
+            autosubsync.synchronize(
+                video_file, srt_file, synced_srt_file,
+                anchor_points=3,  # Use 3 anchor points
+                anchor_duration_secs=300,  # 5-minute segments (300 seconds)
+                verbose=True
+            )
+
+            # Remote files work seamlessly
+            autosubsync.synchronize(
+                'https://example.com/movie.mp4',
+                'https://example.com/subtitles.srt',
+                'synced_output.srt',
+                anchor_points=3  # Efficient anchor-based processing
+            )
     ```
 
 ## Development

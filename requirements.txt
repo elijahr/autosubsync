@@ -1,6 +1,7 @@
 # development requirements
-pysoundfile
+soundfile
 pandas
 numpy
 scikit-learn
 nose
+requests
