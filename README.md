@@ -79,7 +79,7 @@ autosubsync movie.mp4 subs.srt output.srt --anchor_points 3 --anchor_duration_mi
 Instead of processing the entire video file, autosubsync can work with representative anchor points:
 
 ```
-Original Video: |████████████████████████████████████████| (2 hours, 2GB)
+Original Video: |███████████████████████████████████████████████| (2 hours, 2GB)
 
 Anchor Mode:    |██|      |██|      |██|      |██|      |██| (5 anchors, ~25MB total)
                 ^anchor1  ^anchor2  ^anchor3  ^anchor4  ^anchor5
