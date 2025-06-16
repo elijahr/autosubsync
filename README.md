@@ -1,6 +1,6 @@
 # Automatic subtitle synchronization tool
 
-[![PyPI](https://img.shields.pypi/v/autosubsync.svg)](https://pypi.python.org/pypi/autosubsync)
+[![PyPI](https://img.shields.io/pypi/v/autosubsync.svg)](https://pypi.python.org/pypi/autosubsync)
 
 Did you know that hundreds of movies, especially from the 1950s and '60s,
 are now in public domain and available online? Great! Let's download
